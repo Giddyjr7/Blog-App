@@ -44,7 +44,6 @@ def create_post():
             return redirect(url_for('views.home'))
     return render_template('create_post.html', user=current_user, categories=categories)
 
-    
 
 @views.route("/category/<int:cat_id>")
 @login_required
@@ -53,16 +52,13 @@ def category_posts(cat_id):
     posts = Post.query.filter_by(category_id=cat_id).all()
     return render_template("posts.html", user=current_user, posts=posts, username=f"{category.name} Category")
 
+
 @views.route("/tag/<int:tag_id>")
 @login_required
 def tag_posts(tag_id):
     tag = Tag.query.get_or_404(tag_id)
     posts = tag.posts
     return render_template("posts.html", user=current_user, posts=posts, username=f"Tag: {tag.name}")
-
-
-
-
 
 
 @views.route("/delete-post/<id>")
@@ -80,7 +76,6 @@ def delete_post(id):
         flash('Post deleted.', category='success')
 
     return redirect(url_for('views.home'))
-
 
 
 @views.route("/posts/<username>")
@@ -104,7 +99,7 @@ def create_comment(post_id):
     if not text:
         flash('Comment cannot be empty.', category='error')
     else:
-        post = Post.query.filter_by(id=post_id)
+        post = Post.query.filter_by(id=post_id).first()
         if post:
             comment = Comment(
                 text=text, author=current_user.id, post_id=post_id)
@@ -173,3 +168,36 @@ def edit_post(id):
             return redirect(url_for('views.home'))
 
     return render_template('edit_post.html', user=current_user, post=post)
+
+
+# ---------- CATEGORY ROUTES ----------
+@views.route('/create-category', methods=['GET', 'POST'])
+@login_required
+def create_category():
+    if request.method == 'POST':
+        category_name = request.form.get('name')
+
+        if not category_name:
+            flash("Category name cannot be empty", "danger")
+            return redirect(url_for('views.create_category'))
+
+        # Check if category already exists
+        existing = Category.query.filter_by(name=category_name).first()
+        if existing:
+            flash("Category already exists", "warning")
+            return redirect(url_for('views.create_category'))
+
+        new_category = Category(name=category_name)
+        db.session.add(new_category)
+        db.session.commit()
+        flash(f"Category '{category_name}' created successfully!", "success")
+        return redirect(url_for('views.list_categories'))
+
+    return render_template('create_category.html')
+
+
+@views.route('/categories')
+@login_required
+def list_categories():
+    categories = Category.query.all()
+    return render_template('list_categories.html', categories=categories, user=current_user)
