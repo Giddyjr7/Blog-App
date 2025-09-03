@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+
+<h1 align="center">Make a Post</h1>
+
+<form method="POST">
+  <textarea name="text" id="text" class="form-control" placeholder="Write your post here..."></textarea>
+  <br />
+
+  <!-- Category Selection -->
+  <label for="category" class="form-label"><strong>Category:</strong></label>
+  <select name="category_id" class="form-select mb-3">
+    <option value="">--Select Category--</option>
+    {% for cat in categories %}
+      <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Tags Input -->
+  <label for="tags" class="form-label"><strong>Tags (comma separated):</strong></label>
+  <input type="text" name="tags" class="form-control mb-3" placeholder="e.g. Python, Flask, Tutorial">
+
+  <div align="center">
+    <button type="submit" class="btn btn-lg btn-primary">Post</button>
+  </div>
+</form>
+<br />
+<div align="center">
+  <a href="/home">
+    <button type="button" class="btn btn-lg btn-secondary">Back</button>
+  </a>
+</div>
+{% endblock %}
