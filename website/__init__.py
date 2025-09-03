@@ -10,17 +10,24 @@ migrate = Migrate()
 
 DB_NAME = "database.db"
 
-
 def create_app():
     app = Flask(__name__)
 
     # App config
-    app.config['SECRET_KEY'] = "helloworld"
+    app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "helloworld")
 
-    # Use DATABASE_URL from environment (Render), fallback to local SQLite
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        "DATABASE_URL", f"sqlite:///{DB_NAME}"
-    )
+    # DATABASE_URL is set by Render for PostgreSQL
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        # Make sure SQLAlchemy knows it's PostgreSQL
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        # Fallback to local SQLite for dev
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_NAME}"
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize extensions with app
     db.init_app(app)
