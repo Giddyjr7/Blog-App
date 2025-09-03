@@ -1,14 +1,14 @@
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+import os
 
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
-DB_NAME = "database.db"
 
+DB_NAME = "database.db"
 
 
 def create_app():
@@ -16,7 +16,11 @@ def create_app():
 
     # App config
     app.config['SECRET_KEY'] = "helloworld"
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+
+    # Use DATABASE_URL from environment (Render), fallback to local SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        "DATABASE_URL", f"sqlite:///{DB_NAME}"
+    )
 
     # Initialize extensions with app
     db.init_app(app)
@@ -29,7 +33,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/")
 
     # Import models so Flask-Migrate can detect them
-    from .models import User, Post, Comment, Like
+    from .models import User, Post, Comment, Like, Category, Tag
 
     # Setup Login Manager
     login_manager = LoginManager()
@@ -41,4 +45,3 @@ def create_app():
         return User.query.get(int(id))
 
     return app
-
