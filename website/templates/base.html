@@ -14,11 +14,15 @@
       src="https://kit.fontawesome.com/999ca2bb93.js"
       crossorigin="anonymous"
     ></script>
-    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>TIGO - {% block title %}{% endblock %}</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          TIGO
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -29,7 +33,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/home">Home</a>
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" href="/logout">Logout</a>
             {% else %}

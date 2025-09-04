@@ -12,6 +12,7 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
+    app.config['APP_NAME'] = 'TIGO'
 
     # App config
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "helloworld")

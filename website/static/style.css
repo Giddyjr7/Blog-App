@@ -1,0 +1,15 @@
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand img {
+    max-height: 30px;
+    width: auto;
+    transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
