@@ -1,6 +1,6 @@
-# Blog App
+# TIGO Blog App
 
-A Flask-based blogging application that allows users to create, edit, and manage blog posts with authentication features.
+A Flask-based blogging application that allows users to create, edit, and manage blog posts with authentication features. TIGO is a modern, user-friendly platform for sharing your thoughts and connecting with others.
 
 ## Features
 
