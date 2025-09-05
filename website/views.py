@@ -6,12 +6,15 @@ from . import db
 views = Blueprint("views", __name__)
 
 
+
 @views.route("/")
 @views.route("/home")
 @login_required
 def home():
-    posts = Post.query.all()
-    return render_template("home.html", user=current_user, posts=posts)
+    posts = Post.query.order_by(Post.date_created.desc()).all()
+    categories = Category.query.all()
+    return render_template("home.html", user=current_user, posts=posts, categories=categories)
+
 
 
 @views.route("/create-post", methods=['GET', 'POST'])
